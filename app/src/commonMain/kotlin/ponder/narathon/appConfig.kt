@@ -29,7 +29,7 @@ val appConfig = PondConfig(
     ),
     doors = persistentListOf(
         PortalDoor(TablerIcons.Home, StartRoute),
-        PortalDoor(TablerIcons.YinYang, HelloRoute),
-        PortalDoor(TablerIcons.Rocket, ExampleListRoute),
+        PortalDoor(TablerIcons.YinYang, DispatchRoute),
+        // PortalDoor(TablerIcons.Rocket, ExampleListRoute),
     ),
 )
