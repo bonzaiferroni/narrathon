@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
-group = "ponder.narathon.server" // change to your local namespace
+group = "ponder.narrathon.server" // change to your local namespace
 version = "0.0.1"
 
 application {

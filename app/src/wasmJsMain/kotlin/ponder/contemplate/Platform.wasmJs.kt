@@ -1,4 +1,4 @@
-package ponder.narathon
+package ponder.narrathon
 
 class WasmPlatform: Platform {
     override val name: String = "Web with Kotlin/Wasm"

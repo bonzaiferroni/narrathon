@@ -76,11 +76,11 @@ kotlin {
 }
 
 android {
-    namespace = "ponder.narathon"
+    namespace = "ponder.narrathon"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "ponder.narathon"
+        applicationId = "ponder.narrathon"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -108,11 +108,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "ponder.narathon.MainKt"
+        mainClass = "ponder.narrathon.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ponder.narathon"
+            packageName = "ponder.narrathon"
             packageVersion = "1.0.0"
         }
     }

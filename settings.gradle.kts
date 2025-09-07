@@ -1,4 +1,4 @@
-rootProject.name = "narathon"
+rootProject.name = "narrathon"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
