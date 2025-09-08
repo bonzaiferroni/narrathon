@@ -1,5 +1,6 @@
 package ponder.narrathon.app.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +44,9 @@ fun DispatchScreen(
                     ProgressBar(ratio) { Text("$progress of $count") }
                 }
             }
-            NarrationPlayer(state.narration)
+            Box(modifier = Modifier.weight(1f, false)) {
+                NarrationPlayer(state.narration, resetClips = state.resetClips)
+            }
         }
     }
 }

@@ -14,9 +14,9 @@ class NarrationPlayerModel(
 
     val playlist: WavePlaylist = WavePlaylist(this)
 
-    fun load(narration: Narration?) {
+    fun load(narration: Narration?, resetClips: Boolean = true) {
         val narration = narration ?: return
-        playlist.load(narration.segments) { it.bytes }
+        playlist.load(narration.segments, resetClips) { it.bytes }
         setState { it.copy(narration = narration) }
     }
 

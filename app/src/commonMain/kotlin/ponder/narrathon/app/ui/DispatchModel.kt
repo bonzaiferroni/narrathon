@@ -22,7 +22,8 @@ class DispatchModel(
     }
 
     fun setLabel(value: String) {
-        setState { it.copy(label = value) }
+        val narration = stateNow.narration?.copy(label = value)
+        setState { it.copy(label = value, narration = narration) }
     }
 
     fun generate() {
@@ -30,14 +31,15 @@ class DispatchModel(
             val paragraphs = stateNow.content.split('\n').filter { it.isNotEmpty() }
             if (paragraphs.isEmpty()) return@ioLaunch
             setStateWithMain { it.copy(progress = 0, count = paragraphs.size, isSaved = false) }
-            val segments = paragraphs.mapIndexed { index, text ->
+            val segments = mutableListOf<NarrationSegment>()
+            paragraphs.forEachIndexed { index, text ->
                 val bytes = kokoro.getMessage(text)
                 val seconds = wavePlayer.readInfo(bytes) ?: error("seconds not found")
-                setStateWithMain { it.copy(progress = index + 1) }
-                NarrationSegment(text, bytes, seconds)
+                val segment = NarrationSegment(text, bytes, seconds)
+                segments.add(segment)
+                val narration = Narration("", segments, Clock.System.now())
+                setStateWithMain { it.copy(progress = index + 1, narration = narration, resetClips = index == 0) }
             }
-            val narration = Narration("", segments, Clock.System.now())
-            setStateWithMain { it.copy(narration = narration) }
         }
     }
 
@@ -58,4 +60,5 @@ data class DispatchState(
     val progress: Int? = null,
     val count: Int? = null,
     val isSaved: Boolean = false,
+    val resetClips: Boolean = true,
 )
