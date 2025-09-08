@@ -16,7 +16,7 @@ object HelloRoute : AppRoute("Hello")
 object ExampleListRoute : AppRoute("Examples")
 
 @Serializable
-object DispatchRoute : AppRoute("Dispatch")
+object DispatchRoute : AppRoute("Create")
 
 @Serializable
 object LibraryRoute : AppRoute("Library")

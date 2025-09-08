@@ -13,7 +13,7 @@ import pondui.utils.FileDb
 class DispatchModel(
     private val kokoro: KokoroKmpClient = KokoroKmpClient(),
     private val wavePlayer: WavePlayer = WavePlayer(),
-    private val narrationDb: FileDb<Narration> = AppDb.narration
+    private val narrationDb: FileDb<Narration> = AppDb.narration,
 ) : StateModel<DispatchState>() {
     override val state = ModelState(DispatchState())
 
@@ -24,6 +24,10 @@ class DispatchModel(
     fun setLabel(value: String) {
         val narration = stateNow.narration?.copy(label = value)
         setState { it.copy(label = value, narration = narration) }
+    }
+
+    fun setUrl(value: String) {
+        setState { it.copy(url = value) }
     }
 
     fun generate() {
@@ -38,7 +42,7 @@ class DispatchModel(
                 val segment = NarrationSegment(text, bytes, seconds)
                 segments.add(segment)
                 val narration = Narration("", segments, Clock.System.now())
-                setStateWithMain { it.copy(progress = index + 1, narration = narration, resetClips = index == 0) }
+                setStateWithMain { it.copy(progress = index + 1, narration = narration, resetClips = index == 0, tab = "preview") }
             }
         }
     }
@@ -61,4 +65,6 @@ data class DispatchState(
     val count: Int? = null,
     val isSaved: Boolean = false,
     val resetClips: Boolean = true,
+    val tab: String? = null,
+    val url: String = ""
 )
