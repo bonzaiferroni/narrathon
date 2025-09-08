@@ -1,5 +1,6 @@
 package ponder.narrathon.app.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,22 +20,23 @@ fun DispatchScreen(
     val state by viewModel.stateFlow.collectAsState()
     Scaffold {
         Column(1) {
-            TextField(state.content, onTextChanged = viewModel::setContent, modifier = Modifier.weight(1f))
+            TextField(
+                text = state.label,
+                placeholder = "Label",
+                onTextChanged = viewModel::setLabel,
+                modifier = Modifier.fillMaxWidth()
+            )
+            TextField(
+                text = state.content,
+                placeholder = "Content",
+                onTextChanged = viewModel::setContent,
+                modifier = Modifier.fillMaxWidth().weight(1f, false)
+            )
             Row(1) {
                 Button("Generate", onClick = viewModel::generate)
-                Button("Speak", onClick = viewModel::speak, isEnabled = state.secondsMax != null)
-                Button("Save", onClick = viewModel::save, isEnabled = state.secondsMax != null)
-                state.secondsMax?.let {
-                    val progress = state.progress
-                    Text("${formatTime(progress)} / ${formatTime(it)}")
-                }
+                Button("Save", onClick = viewModel::save, isEnabled = state.narration != null)
             }
+            NarrationPlayer(state.narration)
         }
     }
-}
-
-fun formatTime(seconds: Int): String {
-    val minutes = seconds / 60
-    val secs = seconds % 60
-    return "$minutes:%02d".format(secs)
 }
