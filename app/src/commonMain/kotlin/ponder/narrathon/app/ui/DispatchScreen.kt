@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import pondui.ui.controls.Button
 import pondui.ui.controls.Column
+import pondui.ui.controls.ProgressBar
 import pondui.ui.controls.Row
 import pondui.ui.controls.Scaffold
 import pondui.ui.controls.Text
@@ -34,7 +35,13 @@ fun DispatchScreen(
             )
             Row(1) {
                 Button("Generate", onClick = viewModel::generate)
-                Button("Save", onClick = viewModel::save, isEnabled = state.narration != null)
+                val savedLabel = if (state.isSaved) "Saved" else "Save"
+                Button(savedLabel, onClick = viewModel::save, isEnabled = state.narration != null && !state.isSaved)
+                val progress = state.progress; val count = state.count
+                if (progress != null && count != null) {
+                    val ratio = progress / count.toFloat()
+                    ProgressBar(ratio) { Text("$progress of $count") }
+                }
             }
             NarrationPlayer(state.narration)
         }

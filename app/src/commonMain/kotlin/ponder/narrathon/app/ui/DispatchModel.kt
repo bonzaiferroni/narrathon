@@ -14,36 +14,39 @@ class DispatchModel(
     private val kokoro: KokoroKmpClient = KokoroKmpClient(),
     private val wavePlayer: WavePlayer = WavePlayer(),
     private val narrationDb: FileDb<Narration> = AppDb.narration
-): StateModel<DispatchState>() {
+) : StateModel<DispatchState>() {
     override val state = ModelState(DispatchState())
 
     fun setContent(value: String) {
-        setState { it.copy(content = value)}
+        setState { it.copy(content = value) }
     }
 
     fun setLabel(value: String) {
-        setState { it.copy(label = value)}
+        setState { it.copy(label = value) }
     }
 
     fun generate() {
         ioLaunch {
             val paragraphs = stateNow.content.split('\n').filter { it.isNotEmpty() }
             if (paragraphs.isEmpty()) return@ioLaunch
-            val segments = paragraphs.map { text ->
+            setStateWithMain { it.copy(progress = 0, count = paragraphs.size, isSaved = false) }
+            val segments = paragraphs.mapIndexed { index, text ->
                 val bytes = kokoro.getMessage(text)
                 val seconds = wavePlayer.readInfo(bytes) ?: error("seconds not found")
+                setStateWithMain { it.copy(progress = index + 1) }
                 NarrationSegment(text, bytes, seconds)
             }
             val narration = Narration("", segments, Clock.System.now())
-            setState { it.copy(narration = narration) }
+            setStateWithMain { it.copy(narration = narration) }
         }
     }
 
     fun save() {
-        val label = stateNow.label.takeIf { it.isNotEmpty() } ?: return
         val narration = stateNow.narration ?: return
+        val label = stateNow.label.takeIf { it.isNotEmpty() } ?: narration.segments.first().text.take(50)
         ioLaunch {
             narrationDb.create(narration.copy(label = label))
+            setStateWithMain { it.copy(isSaved = true) }
         }
     }
 }
@@ -51,5 +54,8 @@ class DispatchModel(
 data class DispatchState(
     val label: String = "",
     val content: String = "",
-    var narration: Narration? = null
+    var narration: Narration? = null,
+    val progress: Int? = null,
+    val count: Int? = null,
+    val isSaved: Boolean = false,
 )

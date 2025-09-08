@@ -13,6 +13,7 @@ import ponder.narrathon.ui.HelloScreen
 import ponder.narrathon.ui.StartScreen
 import ponder.narrathon.app.ui.DispatchScreen
 import ponder.narrathon.app.ui.LibraryScreen
+import ponder.narrathon.app.ui.PlayerScreen
 import pondui.ui.core.PondConfig
 import pondui.ui.core.RouteConfig
 import pondui.ui.nav.PortalDoor
@@ -28,7 +29,8 @@ val appConfig = PondConfig(
         RouteConfig(ExampleListRoute::matchRoute) { defaultScreen<ExampleListRoute> { ExampleListScreen() } },
         RouteConfig(ExampleProfileRoute::matchRoute) { defaultScreen<ExampleProfileRoute> { ExampleProfileScreen(it) } },
         RouteConfig(DispatchRoute::matchRoute) { defaultScreen<DispatchRoute> { DispatchScreen() } },
-        RouteConfig(LibraryRoute::matchRoute) { defaultScreen<LibraryRoute> { LibraryScreen() } }
+        RouteConfig(LibraryRoute::matchRoute) { defaultScreen<LibraryRoute> { LibraryScreen() } },
+        RouteConfig(PlayerRoute::matchRoute) { defaultScreen<PlayerRoute> { PlayerScreen(it) } }
     ),
     doors = persistentListOf(
         // PortalDoor(TablerIcons.Home, StartRoute),
