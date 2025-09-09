@@ -1,5 +1,8 @@
 package ponder.narrathon.app.ui
 
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readString
+import kabinet.clients.HtmlClient
 import kabinet.clients.KokoroKmpClient
 import kotlinx.datetime.Clock
 import ponder.narrathon.AppDb
@@ -14,6 +17,7 @@ class DispatchModel(
     private val kokoro: KokoroKmpClient = KokoroKmpClient(),
     private val wavePlayer: WavePlayer = WavePlayer(),
     private val narrationDb: FileDb<Narration> = AppDb.narration,
+    private val htmlClient: HtmlClient = HtmlClient()
 ) : StateModel<DispatchState>() {
     override val state = ModelState(DispatchState())
 
@@ -30,6 +34,10 @@ class DispatchModel(
         setState { it.copy(url = value) }
     }
 
+    fun setTab(value: String) {
+        setState { it.copy(tab = value)}
+    }
+
     fun generate() {
         ioLaunch {
             val paragraphs = stateNow.content.split('\n').filter { it.isNotEmpty() }
@@ -43,6 +51,18 @@ class DispatchModel(
                 segments.add(segment)
                 val narration = Narration("", segments, Clock.System.now())
                 setStateWithMain { it.copy(progress = index + 1, narration = narration, resetClips = index == 0, tab = "preview") }
+            }
+        }
+    }
+
+    fun readHtml() {
+        ioLaunch {
+            val document = htmlClient.readUrl(stateNow.url) ?: return@ioLaunch
+            setStateWithMain {
+                it.copy(
+                    label = document.title ?: "",
+                    content = document.contents.joinToString("\n\n") { content -> content.text }
+                )
             }
         }
     }

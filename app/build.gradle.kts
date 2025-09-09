@@ -63,15 +63,16 @@ kotlin {
 
             implementation(project(":pondui"))
             implementation(project(":model"))
+            implementation(project(":kabinet"))
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.logback.classic)
         }
-        wasmJsMain.dependencies {
-            implementation(libs.ktor.client.js)
-        }
+//        wasmJsMain.dependencies {
+//            implementation(libs.ktor.client.js)
+//        }
     }
 }
 
@@ -112,8 +113,34 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "ponder.narrathon"
-            packageVersion = "1.0.0"
+            packageName = "Narrathon"
+            packageVersion = "1.0.3"
+
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("packagedResources"))
+        }
+
+        buildTypes {
+            release {
+                proguard {
+                    isEnabled.set(false)
+                }
+            }
         }
     }
 }
+
+//val devResourcesDir = layout.buildDirectory.dir("compose/tmp/prepareAppResources")
+//
+//val syncDevResources by tasks.registering(Sync::class) {
+//    from(layout.projectDirectory.dir("packagedResources/common"))
+//    // add more if ye like:
+//    // from("packagedResources/linux")
+//    into(devResourcesDir)
+//}
+//
+//// Make sure IDE runs always have the files ready
+//tasks.matching { it.name == "run" || it.name == "runDebug" }.configureEach {
+//    dependsOn(syncDevResources)
+//}
+
+

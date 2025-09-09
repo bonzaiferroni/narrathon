@@ -23,7 +23,7 @@ fun DispatchScreen(
 ) {
     val state by viewModel.stateFlow.collectAsState()
     Scaffold {
-        Tabs(selectedTab = state.tab, modifier = Modifier.weight(1f, false)) {
+        Tabs(selectedTab = state.tab, modifier = Modifier.weight(1f, false), onChangeTab = viewModel::setTab) {
             Tab("from text") {
                 TextField(
                     text = state.label,
@@ -63,6 +63,9 @@ fun DispatchScreen(
             }
         }
         Row(1) {
+            if (state.tab == "from url") {
+                Button("Read", onClick = viewModel::readHtml)
+            }
             Button("Generate", onClick = viewModel::generate)
             val savedLabel = if (state.isSaved) "Saved" else "Save"
             Button(savedLabel, onClick = viewModel::save, isEnabled = state.narration != null && !state.isSaved)
