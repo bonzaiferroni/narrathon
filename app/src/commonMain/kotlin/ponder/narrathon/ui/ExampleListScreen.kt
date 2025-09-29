@@ -22,7 +22,7 @@ fun ExampleListScreen(
     val state by viewModel.stateFlow.collectAsState()
     Scaffold {
         Row(1) {
-            TextField(state.newSymtrix, onTextChanged = viewModel::setSymtrix)
+            TextField(state.newSymtrix, onChange = viewModel::setSymtrix)
             Button("Add", onClick = viewModel::createNewItem)
         }
         LazyColumn {
@@ -32,7 +32,7 @@ fun ExampleListScreen(
                 ) {
                     Text(it.label)
                     Row(1) {
-                        Button("Delete", background = Pond.colors.negation, onClick = { viewModel.deleteItem(it) })
+                        Button("Delete", color = Pond.colors.negation, onClick = { viewModel.deleteItem(it) })
                         RouteButton("View") { ExampleProfileRoute(it.id) }
                     }
                 }

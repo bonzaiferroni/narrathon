@@ -11,12 +11,12 @@ import ponder.narrathon.model.data.NarrationSegment
 import pondui.WavePlayer
 import pondui.ui.core.ModelState
 import pondui.ui.core.StateModel
-import pondui.utils.FileDb
+import pondui.utils.FileDao
 
 class DispatchModel(
     private val kokoro: KokoroKmpClient = KokoroKmpClient(),
     private val wavePlayer: WavePlayer = WavePlayer(),
-    private val narrationDb: FileDb<Narration> = AppDb.narration,
+    private val narrationDb: FileDao<Narration> = AppDb.narration,
     private val htmlClient: HtmlClient = HtmlClient()
 ) : StateModel<DispatchState>() {
     override val state = ModelState(DispatchState())
@@ -42,7 +42,7 @@ class DispatchModel(
         ioLaunch {
             val paragraphs = stateNow.content.split('\n').filter { it.isNotEmpty() }
             if (paragraphs.isEmpty()) return@ioLaunch
-            setStateWithMain { it.copy(progress = 0, count = paragraphs.size, isSaved = false) }
+            setStateFromMain { it.copy(progress = 0, count = paragraphs.size, isSaved = false) }
             val segments = mutableListOf<NarrationSegment>()
             paragraphs.forEachIndexed { index, text ->
                 val bytes = kokoro.getMessage(text)
@@ -50,7 +50,7 @@ class DispatchModel(
                 val segment = NarrationSegment(text, bytes, seconds)
                 segments.add(segment)
                 val narration = Narration("", segments, Clock.System.now())
-                setStateWithMain { it.copy(progress = index + 1, narration = narration, resetClips = index == 0, tab = "preview") }
+                setStateFromMain { it.copy(progress = index + 1, narration = narration, resetClips = index == 0, tab = "preview") }
             }
         }
     }
@@ -58,7 +58,7 @@ class DispatchModel(
     fun readHtml() {
         ioLaunch {
             val document = htmlClient.readUrl(stateNow.url) ?: return@ioLaunch
-            setStateWithMain {
+            setStateFromMain {
                 it.copy(
                     label = document.title ?: "",
                     content = document.contents.joinToString("\n\n") { content -> content.text }
@@ -72,7 +72,7 @@ class DispatchModel(
         val label = stateNow.label.takeIf { it.isNotEmpty() } ?: narration.segments.first().text.take(50)
         ioLaunch {
             narrationDb.create(narration.copy(label = label))
-            setStateWithMain { it.copy(isSaved = true) }
+            setStateFromMain { it.copy(isSaved = true) }
         }
     }
 }

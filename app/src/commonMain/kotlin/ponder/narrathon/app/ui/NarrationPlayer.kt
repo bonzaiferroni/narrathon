@@ -18,14 +18,13 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.PlayerPause
 import compose.icons.tablericons.PlayerPlay
 import ponder.narrathon.model.data.Narration
-import pondui.ui.behavior.Magic
-import pondui.ui.behavior.selected
 import pondui.ui.controls.Button
 import pondui.ui.controls.H3
 import pondui.ui.controls.LazyColumn
 import pondui.ui.controls.Row
 import pondui.ui.controls.Text
 import pondui.ui.controls.actionable
+import pondui.ui.modifiers.selected
 import pondui.ui.theme.Pond
 
 @Composable

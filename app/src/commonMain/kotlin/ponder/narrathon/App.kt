@@ -8,7 +8,7 @@ import pondui.io.ProvideUserContext
 import pondui.ui.core.PondApp
 import pondui.ui.nav.NavRoute
 import pondui.ui.theme.ProvideTheme
-import pondui.utils.FileDb
+import pondui.utils.FileDao
 
 @Composable
 @Preview
@@ -30,5 +30,5 @@ fun App(
 }
 
 object AppDb {
-    val narration = FileDb(Narration::class) { it.toFileName() }
+    val narration = FileDao(Narration::class) { it.toFileName() }
 }

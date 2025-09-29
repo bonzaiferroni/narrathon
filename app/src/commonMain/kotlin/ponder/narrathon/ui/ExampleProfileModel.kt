@@ -17,7 +17,7 @@ class ExampleProfileModel(
 
     init {
         viewModelScope.launch {
-            val example = store.readExample(route.exampleId)
+            val example = store.readExample(route.id)
             setState { it.copy(example = example, symtrix = example.label) }
         }
     }

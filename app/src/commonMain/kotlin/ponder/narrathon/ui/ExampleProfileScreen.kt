@@ -21,11 +21,11 @@ fun ExampleProfileScreen(
     Scaffold {
         Row(1) {
             if (state.isEditing) {
-                TextField(state.symtrix, onTextChanged = viewModel::setSymtrix)
+                TextField(state.symtrix, onChange = viewModel::setSymtrix)
                 Button("Done", onClick = viewModel::finalizeEdit)
             } else {
                 Text(example.label)
-                Button("Edit", onClick = viewModel::toggleEdit, background = Pond.colors.action)
+                Button("Edit", onClick = viewModel::toggleEdit, color = Pond.colors.primary)
             }
         }
     }

@@ -28,13 +28,13 @@ fun DispatchScreen(
                 TextField(
                     text = state.label,
                     placeholder = "Label",
-                    onTextChanged = viewModel::setLabel,
+                    onChange = viewModel::setLabel,
                     modifier = Modifier.fillMaxWidth()
                 )
                 TextField(
                     text = state.content,
                     placeholder = "Content",
-                    onTextChanged = viewModel::setContent,
+                    onChange = viewModel::setContent,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -42,23 +42,23 @@ fun DispatchScreen(
                 TextField(
                     text = state.url,
                     placeholder = "Url",
-                    onTextChanged = viewModel::setUrl,
+                    onChange = viewModel::setUrl,
                     modifier = Modifier.fillMaxWidth()
                 )
                 TextField(
                     text = state.label,
                     placeholder = "Label",
-                    onTextChanged = viewModel::setLabel,
+                    onChange = viewModel::setLabel,
                     modifier = Modifier.fillMaxWidth()
                 )
                 TextField(
                     text = state.content,
                     placeholder = "Content",
-                    onTextChanged = viewModel::setContent,
+                    onChange = viewModel::setContent,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            Tab("preview", state.narration != null) {
+            Tab("preview", isVisible = state.narration != null) {
                 NarrationPlayer(state.narration, resetClips = state.resetClips)
             }
         }

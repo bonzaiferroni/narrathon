@@ -11,7 +11,7 @@ import pondui.ui.controls.Text
 @Composable
 fun PlayerScreen(
     route: PlayerRoute,
-    viewModel: PlayerModel = viewModel { PlayerModel(route.label) }
+    viewModel: PlayerModel = viewModel { PlayerModel(route.id) }
 ) {
     val state by viewModel.stateFlow.collectAsState()
     Scaffold {

@@ -22,7 +22,9 @@ object DispatchRoute : AppRoute("Create")
 object LibraryRoute : AppRoute("Library")
 
 @Serializable
-data class PlayerRoute(val label: String) : IdRoute<String>(TITLE, label) {
+data class PlayerRoute(override val id: String) : IdRoute<String> {
+    override val title get() = TITLE
+
     companion object {
         const val TITLE = "Player"
         fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { PlayerRoute(it) }
@@ -30,9 +32,11 @@ data class PlayerRoute(val label: String) : IdRoute<String>(TITLE, label) {
 }
 
 @Serializable
-data class ExampleProfileRoute(val exampleId: Long) : AppRoute(TITLE) {
+data class ExampleProfileRoute(override val id: String) : IdRoute<String> {
+    override val title get() = TITLE
+
     companion object {
         const val TITLE = "Example"
-        fun matchRoute(path: String) = matchLongIdRoute(path, TITLE) { ExampleProfileRoute(it) }
+        fun matchRoute(path: String) = matchStringIdRoute(path, TITLE) { ExampleProfileRoute(it) }
     }
 }

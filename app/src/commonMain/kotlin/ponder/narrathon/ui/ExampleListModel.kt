@@ -30,7 +30,7 @@ class ExampleListModel(
             val exampleId = store.createExample(NewExample(
                 label = stateNow.newSymtrix
             ))
-            if (exampleId > 0) {
+            if (exampleId.isNotEmpty()) {
                 refreshItems()
                 setState { it.copy(newSymtrix = "") }
             }
