@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
+import io.github.vinceglb.filekit.write
+import kotlinx.coroutines.launch
 import pondui.ui.controls.Button
 import pondui.ui.controls.Column
 import pondui.ui.controls.ProgressBar
@@ -22,6 +26,21 @@ fun DispatchScreen(
     viewModel: DispatchModel = viewModel { DispatchModel() }
 ) {
     val state by viewModel.stateFlow.collectAsState()
+
+    val scope = rememberCoroutineScope()
+    val launcher = rememberFileSaverLauncher { file ->
+        // Write your data to the file
+        val narration = state.narration ?: return@rememberFileSaverLauncher
+        val bytes = mergeWavsToWav(
+            narration.segments.map { it.bytes },
+        )
+        if (file != null) {
+            scope.launch {
+                file.write(bytes)
+            }
+        }
+    }
+
     Scaffold {
         Tabs(selectedTab = state.tab, modifier = Modifier.weight(1f, false), onChangeTab = viewModel::setTab) {
             Tab("from text") {
@@ -68,7 +87,7 @@ fun DispatchScreen(
             }
             Button("Generate", onClick = viewModel::generate)
             val savedLabel = if (state.isSaved) "Saved" else "Save"
-            Button(savedLabel, onClick = viewModel::save, isEnabled = state.narration != null && !state.isSaved)
+            Button(savedLabel, onClick = {launcher.launch("narration", "wav")}, isEnabled = state.narration != null && !state.isSaved)
             val progress = state.progress; val count = state.count
             if (progress != null && count != null) {
                 val ratio = progress / count.toFloat()
@@ -77,3 +96,4 @@ fun DispatchScreen(
         }
     }
 }
+
